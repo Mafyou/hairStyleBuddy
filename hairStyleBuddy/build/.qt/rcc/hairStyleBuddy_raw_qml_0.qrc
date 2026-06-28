@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="/HairStyleBuddy/">
+    <file alias="qml/Main.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/Main.qml</file>
+    <file alias="qml/ActionTile.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/ActionTile.qml</file>
+    <file alias="qml/PageHeader.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/PageHeader.qml</file>
+    <file alias="qml/HomePage.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/HomePage.qml</file>
+    <file alias="qml/AppointmentsPage.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/AppointmentsPage.qml</file>
+    <file alias="qml/ServicesPage.qml">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/qml/ServicesPage.qml</file>
+  </qresource>
+</RCC>
+

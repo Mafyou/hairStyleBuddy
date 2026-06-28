@@ -1,0 +1,10 @@
+--resource
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/.qt/rcc/qmake_HairStyleBuddy.qrc
+--resource
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/.qt/rcc/hairStyleBuddy_raw_qml_0.qrc
+/HairStyleBuddy/qml/Main.qml
+/HairStyleBuddy/qml/ActionTile.qml
+/HairStyleBuddy/qml/PageHeader.qml
+/HairStyleBuddy/qml/HomePage.qml
+/HairStyleBuddy/qml/AppointmentsPage.qml
+/HairStyleBuddy/qml/ServicesPage.qml

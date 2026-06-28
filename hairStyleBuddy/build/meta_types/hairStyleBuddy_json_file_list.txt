@@ -1,0 +1,5 @@
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy_autogen/include/../OFUI5IQLCN/moc_LocalDbService.cpp.json
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy_autogen/include/../OFUI5IQLCN/moc_SettingsService.cpp.json
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy_autogen/include/../PQRTCD6VTJ/moc_AppointmentModel.cpp.json
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy_autogen/include/../PQRTCD6VTJ/moc_ServiceModel.cpp.json
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy_autogen/include/../VU2PALRVTW/moc_AppController.cpp.json

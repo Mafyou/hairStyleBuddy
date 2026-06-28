@@ -1,0 +1,2 @@
+set(__QT_DEPLOY_TARGET_hairStyleBuddy_FILE /home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/hairStyleBuddy)
+set(__QT_DEPLOY_TARGET_hairStyleBuddy_TYPE EXECUTABLE)

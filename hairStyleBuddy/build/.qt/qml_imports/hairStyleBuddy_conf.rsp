@@ -1,0 +1,14 @@
+-rootPath
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy
+-cmake-output
+-output-file
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/.qt/qml_imports/hairStyleBuddy_conf.cmake
+-importPath
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build
+-importPath
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/HairStyleBuddy
+-importPath
+/usr/lib/aarch64-linux-gnu/qt6/qml
+-qrcFiles
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/.qt/rcc/qmake_HairStyleBuddy.qrc
+/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/.qt/rcc/hairStyleBuddy_raw_qml_0.qrc

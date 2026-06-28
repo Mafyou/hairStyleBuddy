@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/">
+    <file alias="/HairStyleBuddy">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/HairStyleBuddy</file>
+
+  </qresource>
+</RCC>

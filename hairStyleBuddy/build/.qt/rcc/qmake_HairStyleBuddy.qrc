@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="/HairStyleBuddy">
+    <file alias="qmldir">/home/mafyou/Documents/hairStyleBuddy/hairStyleBuddy/build/HairStyleBuddy/qmldir</file>
+  </qresource>
+</RCC>
+

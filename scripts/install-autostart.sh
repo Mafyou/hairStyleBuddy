@@ -11,8 +11,8 @@
 set -euo pipefail
 
 APP_NAME="hairStyleBuddy"
-APP_DIR="/home/pi/${APP_NAME}"
-APP_BIN="${APP_DIR}/${APP_NAME}"
+APP_DIR="/home/mafyou/Documents/hairStyleBuddy/${APP_NAME}"
+APP_BIN="${APP_DIR}/build/${APP_NAME}"
 SERVICE_NAME="${APP_NAME}.service"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
 
@@ -42,12 +42,12 @@ Description=HairStyle Buddy — Application staff salon
 After=multi-user.target
 
 [Service]
-User=pi
+User=mafyou
+SupplementaryGroups=video render input
 WorkingDirectory=${APP_DIR}
 
-# Plateforme graphique sans serveur X (framebuffer direct)
-# Options : eglfs (recommandé) | linuxfb (fallback si EGL indisponible)
-Environment=QT_QPA_PLATFORM=eglfs
+# Plateforme graphique framebuffer direct
+Environment=QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:tty=/dev/tty1
 
 # Périphérique tactile résistif — adapter /dev/input/eventX si besoin
 Environment=QT_QPA_EVDEV_TOUCHSCREEN_PARAMETERS=${TOUCH_DEVICE}
@@ -57,6 +57,7 @@ Environment=QT_QPA_EGLFS_HIDECURSOR=1
 
 # Style léger Qt Quick Controls
 Environment=QT_QUICK_CONTROLS_STYLE=Basic
+
 
 ExecStart=${APP_BIN}
 Restart=on-failure

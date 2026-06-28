@@ -1,0 +1,33 @@
+{
+    "classes": [
+        {
+            "className": "SettingsService",
+            "lineNumber": 7,
+            "object": true,
+            "qualifiedClassName": "SettingsService",
+            "signals": [
+                {
+                    "access": "public",
+                    "arguments": [
+                        {
+                            "name": "key",
+                            "type": "QString"
+                        }
+                    ],
+                    "index": 0,
+                    "lineNumber": 18,
+                    "name": "settingChanged",
+                    "returnType": "void"
+                }
+            ],
+            "superClasses": [
+                {
+                    "access": "public",
+                    "name": "QObject"
+                }
+            ]
+        }
+    ],
+    "inputFile": "SettingsService.h",
+    "outputRevision": 69
+}
