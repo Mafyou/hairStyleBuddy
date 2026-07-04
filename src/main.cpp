@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty("appController", &controller);
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
     engine.loadFromModule("HairStyleBuddy", "Main");
 
     if (engine.rootObjects().isEmpty())

@@ -4,17 +4,22 @@ Application staff pour salon de coiffure — interface tactile plein écran sur 
 
 ## Machines
 
-| Rôle        | Machine              | IP              |
-|-------------|----------------------|-----------------|
-| Dev         | Windows 11 / VS Code | —               |
-| Build/test  | Raspberry Pi 5       | 192.168.1.231   |
-| Production  | Raspberry Pi Zero 2W | 192.168.1.247   |
+| Rôle                 | Machine                 | IP              | User    |
+|----------------------|-------------------------|-----------------|---------|
+| Dev (édition code)   | Windows 11 / VS Code    | 192.168.1.131   | —       |
+| Dev (édition code)   | Raspberry Pi 5 Ubuntu   | 192.168.1.229   | mafyou  |
+| Compilation + appli  | Raspberry Pi Zero 2W    | 192.168.1.247   | mafyou  |
+
+> Le Pi 5 et Windows sont des postes de **développement** uniquement.
+> Le Pi Zero 2 W compile **et** exécute l'application.
 
 ---
 
 ## Démarrage rapide
 
-### 1. Prérequis sur le Pi 5 (une seule fois)
+### 1. Prérequis sur le Pi Zero 2 W (une seule fois)
+
+Qt 6 doit être installé **sur le Pi Zero 2 W** (headers + libs pour compiler) :
 
 ```bash
 sudo apt update
@@ -24,21 +29,29 @@ sudo apt install qt6-base-dev qt6-declarative-dev \
                  libqt6sql6-sqlite cmake ninja-build
 ```
 
+> La compilation sur Pi Zero 2 W est lente (512 MB RAM, CPU 1 GHz).
+> Ajouter du swap si le build échoue en mémoire :
+> ```bash
+> sudo dphys-swapfile swapoff
+> sudo sed -i 's/CONF_SWAPSIZE=.*/CONF_SWAPSIZE=512/' /etc/dphys-swapfile
+> sudo dphys-swapfile setup && sudo dphys-swapfile swapon
+> ```
+
 ### 2. Configurer les clés SSH (une seule fois)
 
-Depuis Windows PowerShell :
+Depuis Windows PowerShell (vers Pi Zero 2 W) :
 ```powershell
-# Générer une clé dédiée (appuyer sur Entrée deux fois quand demandé pour ne pas mettre de passphrase)
+# Générer une clé dédiée (appuyer sur Entrée deux fois pour pas de passphrase)
 ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\id_hairbuddy"
 
-# Copier vers Pi 5
-type "$env:USERPROFILE\.ssh\id_hairbuddy.pub" | ssh pi@192.168.1.231 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
+# Copier vers Pi Zero 2 W
+type "$env:USERPROFILE\.ssh\id_hairbuddy.pub" | ssh mafyou@192.168.1.247 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 ```
 
-Depuis le Pi 5, vers le Pi Zero 2 W :
+Depuis le Pi 5 (vers Pi Zero 2 W) :
 ```bash
-ssh-keygen -t ed25519 -N ""
-ssh-copy-id pi@192.168.1.247
+ssh-keygen -t ed25519
+ssh-copy-id mafyou@192.168.1.247
 ```
 
 ### 3. Déployer
@@ -56,24 +69,19 @@ Ce script fait les 3 étapes automatiquement :
 ### 4. Configurer le démarrage automatique (une seule fois sur le Pi Zero 2 W)
 
 ```bash
-ssh pi@192.168.1.247
-bash ~/hairStyleBuddy/scripts/install-autostart.sh
+ssh mafyou@192.168.1.247
+bash ~/Documents/hairStyleBuddy/hairStyleBuddy/scripts/install-autostart.sh
 ```
 
 ---
 
-## Build manuel sur le Pi 5
+## Build manuel directement sur le Pi Zero 2 W
 
 ```bash
-ssh pi@192.168.1.231
-cd ~/hairStyleBuddy
+ssh mafyou@192.168.1.247
+cd ~/Documents/hairStyleBuddy/hairStyleBuddy
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel 4
-```
-
-Si Qt est installé via le Qt Installer (pas `apt`), ajouter le prefix :
-```bash
-cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/Qt/6.5.3/gcc_arm64
+cmake --build build --parallel 1   # 1 seul thread — le Pi Zero plante avec plus
 ```
 
 ---
@@ -81,17 +89,33 @@ cmake -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=~/Qt/6.5.3/gcc_arm
 ## Lancer manuellement sur le Pi Zero 2 W
 
 ```bash
-ssh pi@192.168.1.247
-cd ~/hairStyleBuddy
+ssh mafyou@192.168.1.247
+cd ~/Documents/hairStyleBuddy/hairStyleBuddy/build
 
-# Sans serveur X (mode production)
+# Mode production (framebuffer direct)
+QT_QPA_PLATFORM=linuxfb:fb=/dev/fb0:tty=/dev/tty1 ./hairStyleBuddy
+
+# Fallback si linuxfb ne fonctionne pas
 QT_QPA_PLATFORM=eglfs ./hairStyleBuddy
-
-# Fallback si eglfs ne fonctionne pas
-QT_QPA_PLATFORM=linuxfb ./hairStyleBuddy
 ```
 
 ---
+
+## Développement sur Pi 5
+
+Le Pi 5 est un poste de dev comme Windows — on édite le code, puis on déploie sur Pi Zero :
+
+```bash
+# Depuis le Pi 5, dans le dossier du projet cloné
+bash scripts/deploy.sh   # sync → Pi Zero, compile sur Pi Zero, lance l'app
+```
+
+Pour tester localement sur Pi 5 (optionnel, la résolution/touch sera différente) :
+```bash
+cmake -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build --parallel 4
+QT_QPA_PLATFORM=xcb ./build/hairStyleBuddy   # si X11 disponible sur Pi 5
+```
 
 ## Commandes utiles sur le Pi Zero 2 W
 
@@ -145,7 +169,7 @@ hairStyleBuddy/
 
 ## Données
 
-SQLite stocké dans `~/.local/share/HairStyleBuddy/hairstylebuddy.db`.  
+SQLite stocké dans `~/.local/share/HairStyleBuddy/hairstylebuddy.db` (sur Pi Zero 2 W).  
 Config JSON dans `~/.config/HairStyleBuddy/config.json`.
 
 Des données de démonstration (4 RDV aujourd'hui + 6 prestations) sont insérées automatiquement au premier lancement.

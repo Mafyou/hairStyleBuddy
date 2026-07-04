@@ -4,7 +4,7 @@ project(hairStyleBuddy VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2 Sql)
+find_package(Qt6 REQUIRED COMPONENTS Quick QuickControls2)
 
 qt_standard_project_setup()
 
@@ -16,10 +16,6 @@ qt_add_executable(hairStyleBuddy
     src/backend/models/AppointmentModel.cpp
     src/backend/models/ServiceModel.h
     src/backend/models/ServiceModel.cpp
-    src/backend/services/LocalDbService.h
-    src/backend/services/LocalDbService.cpp
-    src/backend/services/SettingsService.h
-    src/backend/services/SettingsService.cpp
 )
 
 qt_add_qml_module(hairStyleBuddy
@@ -32,6 +28,7 @@ qt_add_qml_module(hairStyleBuddy
         qml/HomePage.qml
         qml/AppointmentsPage.qml
         qml/ServicesPage.qml
+        qml/ServiceDetailPage.qml
 )
 
 target_include_directories(hairStyleBuddy PRIVATE src)
@@ -40,5 +37,4 @@ target_link_libraries(hairStyleBuddy
     PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
-    Qt6::Sql
 )

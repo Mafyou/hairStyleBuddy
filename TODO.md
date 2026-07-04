@@ -24,71 +24,87 @@
 
 ---
 
-## Infrastructure — Pi 5 (machine de build)
+## Infrastructure — Pi Zero 2 W (compilation + exécution)
 
-- [ ] Installer Qt 6.5+ et les modules nécessaires :
+Le Pi Zero 2 W est la seule machine qui **compile et exécute** l'application.
+Windows et Pi 5 ne servent qu'à éditer le code.
+
+### Setup Qt (une seule fois)
+
+- [ ] Installer Qt 6 dev + outils de build :
   ```bash
   sudo apt update
-  sudo apt install qt6-base-dev qt6-declarative-dev qml6-module-qtquick \
-                   qml6-module-qtquick-controls qml6-module-qtquick-layouts \
+  sudo apt install qt6-base-dev qt6-declarative-dev \
+                   qml6-module-qtquick qml6-module-qtquick-controls \
+                   qml6-module-qtquick-layouts \
                    libqt6sql6-sqlite cmake ninja-build
   ```
-- [ ] Vérifier que CMake trouve Qt 6 :
+- [ ] Augmenter le swap pour survivre à la compilation (512 MB RAM insuffisant seul) :
   ```bash
-  cmake --find-package -DNAME=Qt6 -DCOMPILER_ID=GNU -DLANGUAGE=CXX -DMODE=EXIST
+  sudo dphys-swapfile swapoff
+  sudo sed -i 's/CONF_SWAPSIZE=.*/CONF_SWAPSIZE=512/' /etc/dphys-swapfile
+  sudo dphys-swapfile setup && sudo dphys-swapfile swapon
   ```
-- [ ] Configurer les clés SSH depuis Windows vers Pi 5 (pour rsync sans mot de passe) :
+- [ ] Valider le premier build :
+  ```bash
+  cd ~/Documents/hairStyleBuddy/hairStyleBuddy
+  cmake -B build -DCMAKE_BUILD_TYPE=Release
+  cmake --build build --parallel 1   # 1 thread — le Pi Zero plante avec plus
+  ```
+
+### Setup SSH (une seule fois, depuis Windows ou Pi 5)
+
+- [ ] Depuis Windows PowerShell :
   ```powershell
   ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\id_hairbuddy"
-  ssh-copy-id -i "$env:USERPROFILE\.ssh\id_hairbuddy.pub" pi@192.168.1.231
+  type "$env:USERPROFILE\.ssh\id_hairbuddy.pub" | ssh mafyou@192.168.1.247 "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
   ```
-- [ ] Faire un premier build manuel pour valider l'environnement :
-  ```bash
-  cd ~/hairStyleBuddy
-  cmake -B build -DCMAKE_BUILD_TYPE=Release
-  cmake --build build --parallel 4
-  ```
-- [ ] Configurer les clés SSH depuis Pi 5 vers Pi Zero 2 W (pour `scp` dans le script) :
+- [ ] Depuis Pi 5 :
   ```bash
   ssh-keygen -t ed25519
-  ssh-copy-id pi@192.168.1.247
+  ssh-copy-id mafyou@192.168.1.247
   ```
 
----
+### Setup écran et autostart
 
-## Infrastructure — Pi Zero 2 W (machine cible)
-
-- [ ] Installer les bibliothèques Qt runtime (même version que Pi 5) :
-  ```bash
-  sudo apt install libqt6quick6 libqt6quickcontrols2-6 libqt6sql6 libqt6sql6-sqlite
-  ```
-- [ ] Vérifier que le driver EGLFS fonctionne :
-  ```bash
-  QT_QPA_PLATFORM=eglfs ./hairStyleBuddy
-  ```
-  Si erreur EGL → essayer `QT_QPA_PLATFORM=linuxfb`
 - [ ] Calibrer l'écran tactile résistif :
   ```bash
-  sudo apt install evtest xinput
-  evtest   # identifier le device /dev/input/eventX du touchscreen
-  sudo apt install libts-bin
+  sudo apt install evtest libts-bin
+  evtest          # identifier /dev/input/eventX du touchscreen
   ts_calibrate
   ```
-- [ ] Configurer la rotation d'écran si nécessaire dans `/boot/firmware/config.txt` :
+- [ ] Configurer la rotation d'écran si nécessaire (`/boot/firmware/config.txt`) :
   ```
   display_rotate=1   # 0=normal 1=90° 2=180° 3=270°
   ```
-- [ ] Installer le service autostart (voir `scripts/install-autostart.sh`)
-- [ ] Tester le démarrage automatique au reboot : `sudo reboot`
+- [ ] Installer le service autostart : `bash scripts/install-autostart.sh`
+- [ ] Tester le démarrage automatique : `sudo reboot`
 
 ---
 
-## Déploiement (pipeline complet)
+## Infrastructure — Pi 5 Ubuntu (poste de dev, optionnel)
 
-- [ ] S'assurer que Git est configuré sur Pi 5 (`git config --global user.email ...`)
-- [ ] Tester le script `scripts/deploy.sh` depuis Windows Git Bash une première fois manuellement étape par étape
+Le Pi 5 est un **poste de développement**, pas une machine de build.
+
+- [ ] Cloner le repo : `git clone <url> ~/Documents/hairStyleBuddy/hairStyleBuddy`
+- [ ] Configurer les clés SSH vers Pi Zero 2 W (voir section ci-dessus)
+- [ ] Pour tester localement sur Pi 5 (optionnel) :
+  ```bash
+  sudo apt install qt6-base-dev qt6-declarative-dev libqt6sql6-sqlite cmake
+  cmake -B build -DCMAKE_BUILD_TYPE=Debug
+  cmake --build build --parallel 4
+  QT_QPA_PLATFORM=xcb ./build/hairStyleBuddy
+  ```
+
+---
+
+## Déploiement (pipeline)
+
+- [ ] Tester `bash scripts/deploy.sh` depuis Windows Git Bash (première fois)
+- [ ] Tester `bash scripts/deploy.sh` depuis le Pi 5
 - [ ] Valider la fluidité tactile et le fullscreen sur Pi Zero 2 W
 - [ ] Valider le comportement au démarrage à froid (SQLite, premier lancement)
+- [ ] Réduire à `BUILD_JOBS=1` dans deploy.sh si OOM pendant compilation
 
 ---
 

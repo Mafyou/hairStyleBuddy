@@ -12,7 +12,8 @@
 set -euo pipefail
 
 APP_NAME="hairStyleBuddy"
-APP_DIR="/home/mafyou/Documents/hairStyleBuddy/${APP_NAME}"
+# APP_DIR="/home/mafyou/Documents/hairStyleBuddy/${APP_NAME}"
+APP_DIR="D:/source/hairStyleBuddy/${APP_NAME}"
 APP_BIN="${APP_DIR}/build/${APP_NAME}"
 SERVICE_NAME="${APP_NAME}.service"
 

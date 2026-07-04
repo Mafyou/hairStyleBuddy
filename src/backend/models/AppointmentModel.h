@@ -1,7 +1,16 @@
 #pragma once
 
 #include <QAbstractListModel>
-#include "../services/LocalDbService.h"
+#include <QList>
+#include <QString>
+
+struct Appointment {
+    int     id;
+    QString clientName;
+    QString time;
+    QString service;
+    bool    arrived;
+};
 
 class AppointmentModel : public QAbstractListModel
 {
@@ -16,15 +25,14 @@ public:
         ArrivedRole
     };
 
-    explicit AppointmentModel(LocalDbService *db, QObject *parent = nullptr);
+    explicit AppointmentModel(QObject *parent = nullptr);
 
     int      rowCount(const QModelIndex &parent = QModelIndex()) const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE void reload();
+    Q_INVOKABLE void markArrived(int id);
 
 private:
-    LocalDbService     *m_db;
-    QList<Appointment>  m_data;
+    QList<Appointment> m_data;
 };

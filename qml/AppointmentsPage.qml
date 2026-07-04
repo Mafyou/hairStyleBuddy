@@ -10,65 +10,68 @@ Page {
         onBack: page.StackView.view.pop()
     }
 
-    background: Rectangle { color: "#F5F3F0" }
+    background: Rectangle { color: "#FAFAFA" }
 
     ListView {
         id: listView
         anchors.fill: parent
         anchors.margins: 12
-        spacing: 8
+        spacing: 10
         model: appController.appointments
         clip: true
 
         delegate: Rectangle {
             width: listView.width
-            height: 80
-            radius: 10
-            color: arrived ? "#EBF7ED" : "#FFFFFF"
+            height: 88
+            radius: 12
+            color: arrived ? "#E8F5E9" : "#FFFFFF"
+
+            // Bordure gauche colorée
+            Rectangle {
+                width: 5
+                height: parent.height - 16
+                radius: 3
+                color: arrived ? "#81C784" : "#90CAF9"
+                anchors { left: parent.left; leftMargin: 0; verticalCenter: parent.verticalCenter }
+            }
 
             Row {
                 anchors {
                     fill: parent
                     leftMargin: 16
-                    rightMargin: 16
-                    topMargin: 0
-                    bottomMargin: 0
+                    rightMargin: 12
                 }
                 spacing: 0
 
-                // Time column
-                Column {
-                    width: 72
+                // Heure — grande et lisible
+                Text {
+                    width: 78
                     anchors.verticalCenter: parent.verticalCenter
-                    spacing: 2
-
-                    Text {
-                        text: apptTime
-                        font.pixelSize: 20
-                        font.weight: 700
-                        color: "#1C1C1E"
-                    }
+                    text: apptTime
+                    font.pixelSize: 24
+                    font.weight: Font.Bold
+                    color: arrived ? "#2E7D32" : "#1565C0"
                 }
 
-                // Separator
+                // Séparateur
                 Rectangle {
                     width: 1
-                    height: 48
-                    color: "#E5E5EA"
+                    height: 52
+                    color: "#E0E0E0"
                     anchors.verticalCenter: parent.verticalCenter
                 }
 
-                // Client info
+                // Infos cliente
                 Column {
-                    width: parent.width - 72 - 1 - 130 - 16
+                    width: parent.width - 78 - 1 - 130 - 12
                     anchors.verticalCenter: parent.verticalCenter
                     leftPadding: 14
-                    spacing: 4
+                    spacing: 6
 
                     Text {
                         text: clientName
-                        font.pixelSize: 17
-                        font.weight: 600
+                        font.pixelSize: 18
+                        font.weight: Font.SemiBold
                         color: "#1C1C1E"
                         elide: Text.ElideRight
                         width: parent.width - parent.leftPadding
@@ -83,20 +86,20 @@ Page {
                     }
                 }
 
-                // Arrived button
+                // Bouton Arrivée — grand et tactile
                 Rectangle {
-                    width: 110
-                    height: 48
-                    radius: 8
+                    width: 118
+                    height: 60
+                    radius: 10
                     anchors.verticalCenter: parent.verticalCenter
-                    color: arrived ? "#34C759" : "#E5E5EA"
+                    color: arrived ? "#C8E6C9" : "#E3F2FD"
 
                     Text {
                         anchors.centerIn: parent
-                        text: arrived ? "Arrivée ✓" : "Arrivée ?"
-                        font.pixelSize: 14
-                        font.weight: 500
-                        color: arrived ? "#FFFFFF" : "#3C3C43"
+                        text: arrived ? "Arrivee !" : "Arrivee ?"
+                        font.pixelSize: 15
+                        font.weight: Font.Bold
+                        color: arrived ? "#2E7D32" : "#1565C0"
                     }
 
                     TapHandler {
@@ -107,7 +110,6 @@ Page {
             }
         }
 
-        // Empty state
         Text {
             anchors.centerIn: parent
             text: "Aucun rendez-vous aujourd'hui"

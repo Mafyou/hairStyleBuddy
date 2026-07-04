@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls
 
 Rectangle {
     id: root
@@ -8,27 +7,32 @@ Rectangle {
     signal back()
 
     width: parent ? parent.width : 0
-    height: 64
-    color: "#2C2C2C"
+    height: 68
+    color: "#FFFFFF"
 
-    // Back button
+    // Liseré rose en bas
+    Rectangle {
+        width: parent.width
+        height: 3
+        color: "#F48FB1"
+        anchors.bottom: parent.bottom
+    }
+
+    // Bouton retour — large, facile à toucher
     Rectangle {
         id: backBtn
-        width: 80
-        height: 44
-        radius: 8
-        anchors {
-            left: parent.left
-            leftMargin: 12
-            verticalCenter: parent.verticalCenter
-        }
-        color: backTap.pressed ? "#444444" : "transparent"
+        width: 100
+        height: 52
+        radius: 10
+        anchors { left: parent.left; leftMargin: 10; verticalCenter: parent.verticalCenter }
+        color: backTap.pressed ? "#FCE4EC" : "transparent"
 
         Text {
             anchors.centerIn: parent
             text: "< Retour"
-            font.pixelSize: 15
-            color: "#FFFFFF"
+            font.pixelSize: 17
+            font.weight: Font.Medium
+            color: "#C2185B"
         }
 
         TapHandler {
@@ -37,15 +41,14 @@ Rectangle {
         }
     }
 
-    // Page title
     Text {
         anchors.centerIn: parent
         text: root.title
-        font.pixelSize: 18
-        font.weight: 500
-        color: "#FFFFFF"
+        font.pixelSize: 19
+        font.weight: Font.SemiBold
+        color: "#1C1C1E"
         elide: Text.ElideRight
-        width: parent.width - 200
+        width: parent.width - 220
         horizontalAlignment: Text.AlignHCenter
     }
 }

@@ -19,33 +19,12 @@ ApplicationWindow {
     Component {
         id: homeComp
         HomePage {
-            onGoToAppointments: stack.push(appointmentsComp)
-            onGoToServices:     stack.push(servicesComp)
-            onGoToNotes:        stack.push(notesComp)
+            onGoToCategory: (cat) => stack.push(servicesComp, { category: cat })
         }
-    }
-
-    Component {
-        id: appointmentsComp
-        AppointmentsPage {}
     }
 
     Component {
         id: servicesComp
         ServicesPage {}
-    }
-
-    // Placeholder — à implémenter en V2
-    Component {
-        id: notesComp
-        Page {
-            header: PageHeader { title: "Note rapide"; onBack: stack.pop() }
-            Label {
-                anchors.centerIn: parent
-                text: "Fonctionnalité à venir"
-                font.pixelSize: 18
-                color: "#8E8E93"
-            }
-        }
     }
 }

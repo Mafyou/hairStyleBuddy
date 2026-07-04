@@ -1,7 +1,14 @@
 #include "AppointmentModel.h"
 
-AppointmentModel::AppointmentModel(LocalDbService *db, QObject *parent)
-    : QAbstractListModel(parent), m_db(db)
+AppointmentModel::AppointmentModel(QObject *parent)
+    : QAbstractListModel(parent)
+    , m_data({
+        { 1, "Sophie Martin",   "09:00", "Coupe + brushing femme", false },
+        { 2, "Emma Dubois",     "10:30", "Couleur complète",       false },
+        { 3, "Claire Bernard",  "14:00", "Balayage soleil",        false },
+        { 4, "Julie Moreau",    "15:30", "Soin réparateur",        false },
+        { 5, "Isabelle Petit",  "16:30", "Coupe femme",            false },
+    })
 {}
 
 int AppointmentModel::rowCount(const QModelIndex &parent) const
@@ -36,9 +43,14 @@ QHash<int, QByteArray> AppointmentModel::roleNames() const
     };
 }
 
-void AppointmentModel::reload()
+void AppointmentModel::markArrived(int id)
 {
-    beginResetModel();
-    m_data = m_db->todayAppointments();
-    endResetModel();
+    for (int i = 0; i < m_data.size(); ++i) {
+        if (m_data[i].id == id) {
+            m_data[i].arrived = true;
+            const QModelIndex idx = index(i);
+            emit dataChanged(idx, idx, { ArrivedRole });
+            return;
+        }
+    }
 }
